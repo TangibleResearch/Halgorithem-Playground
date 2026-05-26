@@ -1,0 +1,133 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>halgo2 Intelligence Desk</title>
+  <link rel="stylesheet" href="{% static 'verifier/app.css' %}?v=3">
+</head>
+<body>
+  <header class="shell hero">
+    <nav class="nav">
+      <div>
+        <p class="eyebrow">Halgorithem + Django + ChatGPT</p>
+        <h1>halgo2 Intelligence Desk</h1>
+      </div>
+      <div class="server-state" id="serverState">Connecting...</div>
+    </nav>
+
+    <section class="command-strip" aria-label="Workflow summary">
+      <div>
+        <span class="step">1</span>
+        Add trusted sources
+      </div>
+      <div>
+        <span class="step">2</span>
+        Generate or paste response
+      </div>
+      <div>
+        <span class="step">3</span>
+        Verify every claim
+      </div>
+    </section>
+  </header>
+
+  <main class="shell workspace">
+    <section class="input-zone">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Evidence</p>
+          <h2>Trusted source stack</h2>
+        </div>
+        <button class="ghost" id="loadExample" type="button">Load sample</button>
+      </div>
+
+      <label class="field">
+        Source text
+        <textarea id="sourceText" placeholder="Paste source material, notes, policy text, transcripts, or reference facts here."></textarea>
+      </label>
+
+      <div class="dropzone" id="dropzone">
+        <input id="fileInput" type="file" multiple accept=".txt,.md,.json,.csv,.xml,text/*">
+        <div class="drop-icon">+</div>
+        <strong>Drag text files here</strong>
+        <span>or click to choose .txt, .md, .csv, .json, or other UTF-8 text files</span>
+      </div>
+      <div class="file-list" id="fileList"></div>
+
+      <label class="field">
+        Website sources
+        <textarea id="sourceUrls" class="compact" placeholder="Paste URLs, one per line. Wikipedia and normal pages are supported."></textarea>
+      </label>
+    </section>
+
+    <section class="input-zone">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Request</p>
+          <h2>Response to inspect</h2>
+        </div>
+        <button class="ghost" id="generateButton" type="button">Ask ChatGPT</button>
+      </div>
+
+      <label class="field">
+        ChatGPT instruction
+        <textarea id="chatgptPrompt" class="compact" placeholder="Example: Explain what BASIC is and who created it. This prompt is sent to ChatGPT by itself, without the trusted source stack."></textarea>
+      </label>
+
+      <label class="field">
+        OpenAI API key
+        <input id="openaiKey" type="password" autocomplete="off" placeholder="sk-... Used only for this local ChatGPT request.">
+      </label>
+
+      <label class="field">
+        AI response
+        <textarea id="responseText" placeholder="Paste an AI answer here, or click Ask ChatGPT first. The response appears here before Halgorithem verifies it against your sources."></textarea>
+      </label>
+
+      <div class="settings-row">
+        <label class="field">
+          Source label
+          <input id="sourceName" type="text" value="halgo2_source">
+        </label>
+        <label class="field">
+          Threshold
+          <input id="threshold" type="number" min="0" max="1" step="0.01" value="0.30">
+        </label>
+      </div>
+
+      <div class="actions">
+        <button id="verifyButton" type="button">Run verification</button>
+        <button class="secondary" id="clearButton" type="button">Clear</button>
+      </div>
+      <div class="notice" id="notice"></div>
+    </section>
+
+    <section class="results-zone">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Verdict</p>
+          <h2>Claim report</h2>
+        </div>
+        <div class="run-meta" id="runMeta">Ready</div>
+      </div>
+
+      <div class="metrics" id="metrics">
+        <div><strong>0</strong><span>Claims</span></div>
+        <div><strong>0</strong><span>Supported</span></div>
+        <div><strong>0</strong><span>Issues</span></div>
+        <div><strong>0%</strong><span>Confidence</span></div>
+      </div>
+
+      <div class="generated" id="generated"></div>
+      <div class="source-pills" id="sourcePills"></div>
+      <div class="results" id="results">
+        <div class="empty">Add sources and run verification to see claim-level evidence.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="{% static 'verifier/app.js' %}?v=3"></script>
+</body>
+</html>

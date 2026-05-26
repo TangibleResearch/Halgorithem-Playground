@@ -1,7 +1,8 @@
+Django>=5.0,<6
 beautifulsoup4>=4.12
-fastcoref>=2.1
 numpy<2
 clean-text>=0.6
+fastcoref>=2.1
 html2text>=2024.2.26
 markdown-it-py>=3
 negspacy>=1.0
@@ -16,17 +17,16 @@ scikit-learn>=1.3
 sentence-transformers>=2.7
 spacy>=3.7
 spacy-curated-transformers>=0.3
+pytest>=8
 sympy>=1.12
 textacy>=0.13
 stemming>=1.0
 torch>=2
 transformers>=4
 
-# Optional but recommended for best NLP accuracy:
-#   python -m spacy download en_core_web_trf
-#
-# CI and lightweight installs may use:
+# Installed by `make install`:
 #   python -m spacy download en_core_web_sm
+#   python -m nltk.downloader wordnet omw-1.4 punkt averaged_perceptron_tagger
 #
-# If neither model is present, Halgorithem falls back to spacy.blank("en")
-# with reduced accuracy but without an import-time crash.
+# Optional higher-accuracy model:
+#   python -m spacy download en_core_web_trf

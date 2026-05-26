@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "halgorithem"
+name = "halgo2"
 version = "1.0.0"
 description = "Deterministic hallucination detection against trusted source material."
 readme = "README.md"
@@ -13,6 +13,7 @@ authors = [
   { name = "Tangible Research" }
 ]
 dependencies = [
+  "Django>=5.0,<6",
   "numpy<2",
   "beautifulsoup4>=4.12",
   "clean-text>=0.6",
@@ -40,6 +41,7 @@ dependencies = [
 
 [project.scripts]
 halgorithem = "Halgorithem.main:main"
+halgo2-server = "Halgorithem.server:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]

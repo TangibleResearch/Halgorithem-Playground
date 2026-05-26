@@ -2,6 +2,10 @@ from bs4 import BeautifulSoup
 import requests
 import html2text
 from pathlib import Path
+from urllib.parse import quote, unquote
+
+
+MAX_SCRAPED_CHARS = 20000
 
 class WebScraper:
     def __init__(self, list_of_urls, output_dir="."):
@@ -21,15 +25,26 @@ class WebScraper:
         }
         for url in self.urls:
             try:
-                # use clean Wikipedia API instead of scraping
+                # Use Wikipedia's extract API so source-backed verification has
+                # enough page text to judge more than the short page summary.
                 if "wikipedia.org/wiki/" in url:
-                    title = url.split("/wiki/")[-1]
-                    api_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
-                    response = requests.get(api_url, 
-                                        timeout=5, 
-                                        headers=headers)
+                    title = quote(unquote(url.split("/wiki/", 1)[-1].split("#", 1)[0]))
+                    response = requests.get(
+                        "https://en.wikipedia.org/w/api.php",
+                        timeout=8,
+                        headers=headers,
+                        params={
+                            "action": "query",
+                            "prop": "extracts",
+                            "explaintext": "1",
+                            "redirects": "1",
+                            "format": "json",
+                            "titles": title,
+                        },
+                    )
                     response.raise_for_status()
-                    plain_text = response.json().get("extract", "")
+                    pages = response.json().get("query", {}).get("pages", {})
+                    plain_text = next((page.get("extract", "") for page in pages.values()), "")
                 else:
                     page = requests.get(url, timeout=5, headers=headers)
                     page.raise_for_status()
@@ -38,7 +53,7 @@ class WebScraper:
                                     "style", "header", "aside"]):
                         tag.decompose()
                     plain_text = self.converter.handle(str(soup))
-                    plain_text = plain_text[:8000]  # cap non-wiki sources
+                plain_text = plain_text[:MAX_SCRAPED_CHARS]
 
                 file_path = self.output_dir / f"file{self.counter}.txt"
                 with file_path.open("w", encoding="utf-8") as f:

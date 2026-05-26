@@ -202,7 +202,7 @@ class Halgorithm:
     # ── Math claims ───────────────────────────────────────────────────────────
 
     def classify_claim_type(self, claim):
-        if re.search(r"\d+\s*[\+\-\*/%^]\s*\d+|(?<!\w)=(?!\w)", claim.lower()):
+        if re.search(r"(?<!\w)=(?!\w)", claim.lower()):
             return "MATH"
         return "SOURCE"
 
